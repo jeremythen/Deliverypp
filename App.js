@@ -8,30 +8,18 @@
 
 import React from 'react';
 import {
-  SafeAreaView,
-  StyleSheet,
-  ScrollView,
   View,
   Text,
-  StatusBar,
 } from 'react-native';
 
-import {
-  Header,
-  LearnMoreLinks,
-  Colors,
-  DebugInstructions,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
 
-import AvailableProductsView from './src/components/products/AvailableProductsView';
-import Test from './src/components/products/Test';
+import LocationMap from './src/components/LocationMap';
 
 const App = () => {
   return (
     <>
     <View>
-        <AvailableProductsView />
+        <LocationMap />
     </View>
     </>
   );
