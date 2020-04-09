@@ -1,6 +1,7 @@
 import React from 'react';
 import MapView from 'react-native-maps';
-import { StyleSheet, View, Dimensions} from 'react-native';
+import { StyleSheet, View, Dimensions, Text } from 'react-native';
+import { Badge, Icon, SearchBar, Overlay, Button } from 'react-native-elements';
 
 const {height, width} = Dimensions.get('window');
 
@@ -10,7 +11,7 @@ const styles = StyleSheet.create({
     width
   },
     map: {
-      height,
+      height: height - 100,
       width
     }
 
@@ -23,8 +24,7 @@ class LocationMap extends React.Component {
     this.state = {
       loading: true,
       region: {
-        latitude: 18.4667,
-        longitude: -69.9000,
+        ...JSON.parse(this.props.route.params.location).coords,
         latitudeDelta: 0.0922,
         longitudeDelta: 0.0421,
       },
@@ -64,10 +64,22 @@ class LocationMap extends React.Component {
             }}
           
             title={'Your Location'}
-
           />
 
         </MapView>
+        <Button
+          iconRight
+          icon={
+            <Icon
+              name="check"
+              color="white"
+              size={28}
+              type='font-awesome'
+            />
+          }
+          title="Ordenar "
+          //onPress={() => props.setModalVisible(false)}
+        />
       </View>
       
     );

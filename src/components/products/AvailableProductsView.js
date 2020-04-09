@@ -1,16 +1,21 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, ScrollView, Alert } from 'react-native';
+import { StyleSheet, Text, View, ScrollView, Alert, ActivityIndicator } from 'react-native';
 
 import { Badge, Icon, SearchBar, Overlay, Button } from 'react-native-elements';
 
 import Product from './Product';
 
-export default function AvailableProductsView() {
+import Geolocation from '@react-native-community/geolocation';
+
+export default function AvailableProductsView(props) {
 
   let [total, setTotal] = useState(0);
   let [itemCount, setItemCount] = useState(0);
   let [searchString, setSearchString] = useState('');
   let [modalVisible, setModalVisible] = useState(false);
+  let [loading, setLoading] = useState(false);
+  
+  const [location, setLocation] = useState(null);
 
   const handleSetTotal = (productTotal) => {
     setTotal(total + productTotal);
@@ -28,8 +33,27 @@ export default function AvailableProductsView() {
   }
 
   const order = () => {
-    Alert.alert("in order");
+
+    setLoading(true);
+
+    findCoordinates();
+
   }
+
+
+  const findCoordinates = () => {
+    Geolocation.getCurrentPosition(
+      position => {
+        setLoading(false);
+        const location = JSON.stringify(position);
+        props.navigation.navigate('LocationMap', {total: total, location: location});
+      },
+      error => Alert.alert(error.message),
+      { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
+    );
+  };
+
+  
 
   return (
 
@@ -42,8 +66,10 @@ export default function AvailableProductsView() {
         order={order}
       />
 
+      <Loader loading={loading} />
+
       <View>
-        <Text style={{ marginTop: 40, fontSize: 28, textAlign: 'center' }}>
+        <Text style={{ fontSize: 22, textAlign: 'center' }}>
           Productos Disponibles
             </Text>
       </View>
@@ -61,9 +87,10 @@ export default function AvailableProductsView() {
         <View>
 
           {
-            products.filter(product => product.category.toLowerCase().includes(searchString.toLowerCase())).map(product => {
+            products.filter(product => product.title.toLowerCase().includes(searchString.toLowerCase())).map(product => {
               return (
                 <Product
+                  key={product.id}
                   product={product}
                   setTotal={(productTotal) => handleSetTotal(productTotal)}
                   handleItemCount={(totalItemCount) => handleItemCount(totalItemCount)}
@@ -105,6 +132,7 @@ export default function AvailableProductsView() {
             type='font-awesome'
             color={mainColor}
             size={48}
+            onPress={() => order()}
           />
         </View>
 
@@ -157,6 +185,27 @@ function CartModal(props) {
 
       </View>
 
+    </Overlay>
+  );
+
+}
+
+function Loader(props) {
+
+  return (
+    <Overlay
+      isVisible={props.loading}
+      overlayBackgroundColor="rgba(255, 255, 255, .5)"
+      overlayStyle={{borderWidth: 0, borderColor: 'transparent'}}
+      width={'100%'}
+      height={'100%'}
+    >
+
+      <View style={{flex: 1, justifyContent: 'center', alignContent: 'center', textAlign: 'center'}}>
+        <ActivityIndicator size="large" color="#mainColor" />
+        <Text style={{textAlign: 'center', color: 'grey'}}>Espere...</Text>
+      </View>
+    
     </Overlay>
   );
 
@@ -219,7 +268,7 @@ const products = [
     },
     title: 'Leche Evaporada Carnation, 34 oz',
     price: 50,
-    category: 'leche'
+    id: 1
 
   },
   {
@@ -230,7 +279,7 @@ const products = [
     },
     title: 'Arroz Campos, 2 libras',
     price: 90,
-    category: 'arroz'
+    id: 2
 
   },
   {
@@ -241,7 +290,6 @@ const products = [
     },
     title: 'Maiz Dulce La Famosa, 15 ox',
     price: 35,
-    category: 'maiz'
-
+    id: 3
   },
 ]
