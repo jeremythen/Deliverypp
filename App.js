@@ -54,9 +54,9 @@ const App = () => {
             setTimeout(() => setLoading(false), 1000);
             
           } else {
-              //setIsLoggedIn(!!data);
+              setIsLoggedIn(!!data);
               //Alert.alert('data ' + data);
-              setIsLoggedIn(true);
+              //setIsLoggedIn(true);
               setTimeout(() => setLoading(false), 1000);
           }
       }
