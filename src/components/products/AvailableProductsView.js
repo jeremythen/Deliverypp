@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, ScrollView, Alert, ActivityIndicator } from 'react-native';
+import { StyleSheet, Text, View, Alert, ActivityIndicator } from 'react-native';
 
 import { Badge, Icon, SearchBar, Overlay, Button } from 'react-native-elements';
 
-import Product from './Product';
-
 import Geolocation from '@react-native-community/geolocation';
+
+import ProductList from './ProductList';
+
+import Loader from './../Loader';
 
 export default function AvailableProductsView(props) {
 
@@ -53,8 +55,6 @@ export default function AvailableProductsView(props) {
     );
   };
 
-  
-
   return (
 
     <View style={{ maxHeight: '100%' }}>
@@ -66,43 +66,38 @@ export default function AvailableProductsView(props) {
         order={order}
       />
 
-      <Loader loading={loading} />
+      <Loader loading={loading} color={props.color}/>
 
       <View>
-        <Text style={{ fontSize: 22, textAlign: 'center' }}>
-          Productos Disponibles
-            </Text>
+        <Text style={{ fontSize: 22, textAlign: 'center', color: props.color }}>Productos Disponibles</Text>
       </View>
 
-      <View>
-        <SearchBar
-          placeholder="Buscar..."
-          onChangeText={setSearchString}
-          value={searchString}
-          round={true}
-        />
-      </View>
+      <SearchBar
+        placeholder="Buscar..."
+        onChangeText={setSearchString}
+        value={searchString}
+        round
+        style={{padding: 0}}
+        lightTheme
+        inputStyle={{fontSize: 14, height: 10}}
+      />
 
-      <ScrollView style={{ marginBottom: 60 }}>
-        <View>
+      <ProductList
+        items={products.filter(product => product.title.toLocaleLowerCase().includes(searchString.toLocaleLowerCase()))}
+        setTotal={(productTotal) => handleSetTotal(productTotal)}
+        handleItemCount={(totalItemCount) => handleItemCount(totalItemCount)}
+        color={props.color}
+      />
 
-          {
-            products.filter(product => product.title.toLowerCase().includes(searchString.toLowerCase())).map(product => {
-              return (
-                <Product
-                  key={product.id}
-                  product={product}
-                  setTotal={(productTotal) => handleSetTotal(productTotal)}
-                  handleItemCount={(totalItemCount) => handleItemCount(totalItemCount)}
-                  color={mainColor}
-                />
-              )
-            })
-          }
-        </View>
+      <ShoppingCartView total={total} itemCount={itemCount} setModalVisible={setModalVisible} order={order} color={props.color}/>
 
-      </ScrollView>
+    </View>
+  );
+}
 
+function ShoppingCartView(props) {
+
+    return (
       <View style={styles.cartContainer}>
 
         <View key="shoppingCartIconContainer">
@@ -110,37 +105,34 @@ export default function AvailableProductsView(props) {
             <Icon
               name='shopping-cart'
               type='font-awesome'
-              color={mainColor}
+              color={props.color}
               size={44}
-              onPress={() => setModalVisible(true)}
+              onPress={() => props.setModalVisible(true)}
             />
             <Badge
               status="success"
               containerStyle={{ position: 'absolute', top: -4, right: -4 }}
-              value={itemCount}
+              value={props.itemCount}  
             />
           </View>
         </View>
 
         <View key="ShoppingCartTotalContainer">
-          <Text style={{ color: mainColor, fontSize: 24 }}>RD${total.toFixed(2)}</Text>
+          <Text style={{ color: props.color, fontSize: 24 }}>RD${props.total.toFixed(2)}</Text>
         </View>
 
         <View key="ShoppingCartAngleContainer">
           <Icon
             name='angle-right'
             type='font-awesome'
-            color={mainColor}
+            color={props.color}
             size={48}
-            onPress={() => order()}
+            onPress={props.order}
           />
         </View>
 
       </View>
-
-
-    </View>
-  );
+    )
 }
 
 function CartModal(props) {
@@ -190,31 +182,13 @@ function CartModal(props) {
 
 }
 
-function Loader(props) {
-
-  return (
-    <Overlay
-      isVisible={props.loading}
-      overlayBackgroundColor="rgba(255, 255, 255, .5)"
-      overlayStyle={{borderWidth: 0, borderColor: 'transparent'}}
-      width={'100%'}
-      height={'100%'}
-    >
-
-      <View style={{flex: 1, justifyContent: 'center', alignContent: 'center', textAlign: 'center'}}>
-        <ActivityIndicator size="large" color="#mainColor" />
-        <Text style={{textAlign: 'center', color: 'grey'}}>Espere...</Text>
-      </View>
-    
-    </Overlay>
-  );
-
-}
-
-const mainColor = '#55a389';
-
 const styles = StyleSheet.create({
 
+  mainContainer: {
+    
+
+
+  },
   backgroundImage: {
     flex: 1,
     resizeMode: 'cover',
@@ -224,7 +198,6 @@ const styles = StyleSheet.create({
   },
 
   cartContainer: {
-    flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',

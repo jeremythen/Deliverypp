@@ -71,7 +71,7 @@ export default function Product(props) {
 
                 <View>
 
-                    <Text style={style.textStyle}>RD${price.toFixed(2)}</Text>
+                    <Text style={[style.textStyle, {color: props.color}]}>RD${price.toFixed(2)}</Text>
 
                 </View>
 

@@ -60,6 +60,8 @@ target 'Deliverypp' do
 
   pod 'react-native-geolocation', :path => '../node_modules/@react-native-community/geolocation'
 
+  pod 'RNGestureHandler', :path => '../node_modules/react-native-gesture-handler'
+
   target 'DeliveryppTests' do
     inherit! :complete
     # Pods for testing

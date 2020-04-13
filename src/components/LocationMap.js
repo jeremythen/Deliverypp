@@ -1,6 +1,6 @@
 import React from 'react';
 import MapView from 'react-native-maps';
-import { StyleSheet, View, Dimensions, Text } from 'react-native';
+import { StyleSheet, View, Dimensions, Text, Alert, TouchableHighlight } from 'react-native';
 import { Badge, Icon, SearchBar, Overlay, Button } from 'react-native-elements';
 
 const {height, width} = Dimensions.get('window');
@@ -10,10 +10,16 @@ const styles = StyleSheet.create({
     height,
     width
   },
-    map: {
-      height: height - 100,
-      width
-    }
+  map: {
+    height: height - 100,
+    width
+  },
+  button: {
+    alignItems: "center",
+    padding: 10,
+    color: 'white',
+    textAlign: 'center'
+  }
 
 });
 
@@ -32,6 +38,7 @@ class LocationMap extends React.Component {
     
     this.onMapReady = this.onMapReady.bind(this);
     this.onRegionChange = this.onRegionChange.bind(this);
+    this.onOrder = this.onOrder.bind(this);
 
   }
 
@@ -39,8 +46,14 @@ class LocationMap extends React.Component {
     console.log('map ready');
   }
 
-  onRegionChange() {
-    console.log('onRegionChange')
+  onRegionChange(region) {
+
+    this.setState({region});
+
+  }
+
+  onOrder() {
+    Alert.alert('Ordering.');
   }
 
   render() {
@@ -55,6 +68,7 @@ class LocationMap extends React.Component {
           showsCompass={true}
           zoomControlEnabled={true}
           showsTraffic={true}
+          onRegionChange={(region) => this.onRegionChange(region)}
           >
 
           <MapView.Marker
@@ -67,19 +81,17 @@ class LocationMap extends React.Component {
           />
 
         </MapView>
-        <Button
-          iconRight
-          icon={
-            <Icon
-              name="check"
-              color="white"
-              size={28}
-              type='font-awesome'
-            />
-          }
-          title="Ordenar "
-          //onPress={() => props.setModalVisible(false)}
-        />
+
+        <TouchableHighlight
+            activeOpacity={0.6}
+            underlayColor="#DDDDDD"
+            //onPress={() => this.onOrder()}
+            onPress={() => this.props.navigation.navigate('MakePayment', {total: this.props.total})}
+            style={{backgroundColor: this.props.color, borderRadius: 5 }}
+        >
+          <Text style={styles.button}>Ordenar</Text>
+        </TouchableHighlight>
+
       </View>
       
     );
