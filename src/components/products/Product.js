@@ -1,7 +1,12 @@
 import React, { useState } from 'react';
 
-import { StyleSheet, Image, View, Text, Button, Alert, Modal } from 'react-native';
+import { StyleSheet, Image, View, Text } from 'react-native';
 import { Icon } from 'react-native-elements';
+
+const imageSize = {
+    width: '100%',
+    height: '80%'
+}
 
 export default function Product(props) {
 
@@ -12,18 +17,24 @@ export default function Product(props) {
     
     const reduceItemCount = () => {
         if (itemCount > 0) {
+            const newItemCount = itemCount - 1;
             setItemCount(itemCount - 1);
             props.handleItemCount(-1);
-            setTotal(total - price);
+            const newTotal = total - price;
+            setTotal(newTotal);
             props.setTotal(-price); 
+            props.onProductSelect({ id: props.product.id, count: newItemCount, description: props.product.description, total: newTotal, price: props.product.price });
         }
     }
 
     const increaseItemCount = () => {
-        setItemCount(itemCount + 1);
+        const newItemCount = itemCount + 1;
+        setItemCount(newItemCount);
         props.handleItemCount(1);
-        setTotal(total + price);
+        const newTotal = total + price;
+        setTotal(newTotal);
         props.setTotal(price);
+        props.onProductSelect({ id: props.product.id, count: newItemCount, description: props.product.description, total: newTotal, price: props.product.price });
     }
 
     const mainStyle = StyleSheet.create({
@@ -54,18 +65,17 @@ export default function Product(props) {
 
     return (
 
-
         <View style={mainStyle.container}>
 
             <View style={style.imageContainerStyle}>
-                <Image source={props.product.img} key={props.product.img.id} />
+                <Image source={{uri: props.product.imageUrl, ...imageSize}} key={props.product.id} />
             </View>
 
             <View style={style.detailsContainer}>
 
                 <View style={{height: 65, marginBottom: 10, overflow: 'hidden'}}>
 
-                    <Text style={style.textStyle}>{props.product.title}</Text>
+                    <Text style={style.textStyle}>{props.product.description}</Text>
 
                 </View>
 

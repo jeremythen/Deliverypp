@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, Alert, ActivityIndicator } from 'react-native';
 
 import { Badge, Icon, SearchBar, Overlay, Button } from 'react-native-elements';
@@ -9,15 +9,39 @@ import ProductList from './ProductList';
 
 import Loader from './../Loader';
 
+import ProductService from '../../services/ProductService';
+
 export default function AvailableProductsView(props) {
 
-  let [total, setTotal] = useState(0);
-  let [itemCount, setItemCount] = useState(0);
-  let [searchString, setSearchString] = useState('');
-  let [modalVisible, setModalVisible] = useState(false);
-  let [loading, setLoading] = useState(false);
+  const [total, setTotal] = useState(0);
+  const [itemCount, setItemCount] = useState(0);
+  const [searchString, setSearchString] = useState('');
+  const [modalVisible, setModalVisible] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [products, setProducts] = useState([]);
+
+  const [selectedProducts, setSelectedProducts] = useState([]);
+
+  const handleGetProducts = async () => {
+
+    try {
+      const response = await ProductService.getProducts();
+      
+      if(response.success) {
+        setProducts(response.response);
+      } else {
+        Alert.alert('Error obteniendo productos: ' + response.message);
+      }
+
+    } catch(e) {
+      Alert.alert('Error obteniendo productos. Trate más tarde.');
+    }
   
-  const [location, setLocation] = useState(null);
+  };
+
+  useEffect(() => {
+    handleGetProducts();
+  }, []);
 
   const handleSetTotal = (productTotal) => {
     setTotal(total + productTotal);
@@ -36,23 +60,44 @@ export default function AvailableProductsView(props) {
 
   const order = () => {
 
+    if(selectedProducts.length === 0 || total === 0) {
+      return Alert.alert('Selecciona al menos un producto para continuar.');
+    }
+
     setLoading(true);
 
     findCoordinates();
 
   }
 
-
   const findCoordinates = () => {
     Geolocation.getCurrentPosition(
       position => {
         setLoading(false);
         const location = JSON.stringify(position);
-        props.navigation.navigate('LocationMap', {total: total, location: location});
+        props.navigation.navigate('LocationMap', { total, location, selectedProducts });
       },
       error => Alert.alert(error.message),
       { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
     );
+  };
+
+  const handleProductSelection = (productSelection) => {
+
+    const newSelectedProducts = [...selectedProducts];
+
+    const selectedProduct = newSelectedProducts.find(selectedProduct => selectedProduct.id === productSelection.id);
+
+    if(selectedProduct) {
+      selectedProduct.count = productSelection.count;
+      setSelectedProducts(newSelectedProducts);
+    } else {
+
+      newSelectedProducts.push(productSelection);
+      setSelectedProducts(newSelectedProducts);
+
+    }
+
   };
 
   return (
@@ -83,13 +128,14 @@ export default function AvailableProductsView(props) {
       />
 
       <ProductList
-        items={products.filter(product => product.title.toLocaleLowerCase().includes(searchString.toLocaleLowerCase()))}
+        items={products.filter(product => product.description.toLocaleLowerCase().includes(searchString.toLocaleLowerCase()))}
         setTotal={(productTotal) => handleSetTotal(productTotal)}
         handleItemCount={(totalItemCount) => handleItemCount(totalItemCount)}
+        onProductSelect={(productSelection) => handleProductSelection(productSelection) }
         color={props.color}
       />
 
-      <ShoppingCartView total={total} itemCount={itemCount} setModalVisible={setModalVisible} order={order} color={props.color}/>
+      <ShoppingCartView total={total} itemCount={selectedProducts.reduce((count, selectedProduct) => selectedProduct.count + count, 0)} setModalVisible={setModalVisible} order={order} color={props.color}/>
 
     </View>
   );
@@ -171,7 +217,7 @@ function CartModal(props) {
               type='font-awesome'
             />
           }
-          title="Ordenar "
+          title="Ordenar"
           onPress={props.order}
         />
 
@@ -184,11 +230,6 @@ function CartModal(props) {
 
 const styles = StyleSheet.create({
 
-  mainContainer: {
-    
-
-
-  },
   backgroundImage: {
     flex: 1,
     resizeMode: 'cover',
@@ -227,42 +268,3 @@ const styles = StyleSheet.create({
   }
 });
 
-const imageSize = {
-  width: '100%',
-  height: '80%'
-}
-
-const products = [
-  {
-    img: {
-      uri: 'https://www.compradetodo.net/wp-content/uploads/2019/05/023ee5e3-6727-4256-a987-85aeffc9cb40_1.7b75d31d74a60cecd95d2445b34588c2.jpeg',
-      id: 1,
-      ...imageSize
-    },
-    title: 'Leche Evaporada Carnation, 34 oz',
-    price: 50,
-    id: 1
-
-  },
-  {
-    img: {
-      uri: 'https://elian.do/wp-content/uploads/2019/05/arroz-campo-10-libras.jpg',
-      id: 2,
-      ...imageSize
-    },
-    title: 'Arroz Campos, 2 libras',
-    price: 90,
-    id: 2
-
-  },
-  {
-    img: {
-      uri: 'https://lafamosa.com/wp-content/uploads/2016/11/Mai%CC%81z-dulce-15oz.jpg',
-      id: 3,
-      ...imageSize
-    },
-    title: 'Maiz Dulce La Famosa, 15 ox',
-    price: 35,
-    id: 3
-  },
-]

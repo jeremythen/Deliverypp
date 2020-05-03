@@ -15,6 +15,7 @@ function ProductList(props) {
                     setTotal={(productTotal) => props.setTotal(productTotal)}
                     handleItemCount={(totalItemCount) => props.handleItemCount(totalItemCount)}
                     color={props.color}
+                    onProductSelect={props.onProductSelect}
                 /> 
             )}
             keyExtractor={item => item.id}

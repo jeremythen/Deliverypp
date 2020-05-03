@@ -1,0 +1,108 @@
+import axios from 'react-native-axios';
+
+const basePath = 'http://165.227.191.188:8080';
+
+const AuthService = {
+    generateErrorResponse(error) {
+
+        let message = error.message;
+
+        if(message.includes('401')) {
+            message = "Credenciales incorrectas. Verifique que su usuario y contraseña son correctos."
+        }
+
+        const responseData = {
+            success: false,
+            status: 'ERROR',
+            message: message
+        };
+
+        return responseData;
+    },
+    handleResponse(response) {
+        if(response && response.data) {
+
+            const deliveryppResponse = response.data;
+
+            return deliveryppResponse;
+
+        }
+    },
+    async register(user) {
+
+        try {
+            const response = await axios.post(`${basePath}/api/register`, user);
+
+            const responseData = this.handleResponse(response);
+    
+            return responseData;
+    
+        } catch(e) {
+
+            return this.generateErrorResponse(e);
+
+        }
+
+    },
+    async login(user) {
+
+        try {
+            const response = await axios.post(`${basePath}/api/login`, user);
+
+            const responseData = this.handleResponse(response);
+
+            return responseData;
+    
+        } catch(e) {
+            
+            return this.generateErrorResponse(e);
+
+        }
+        
+    },
+    async getUserByToken(token) {
+
+        try {
+
+            const headers = {
+                Authorization: `Bearer ${token}`
+            };
+    
+            const response = await axios.get(`${basePath}/api/auth/${token}`, headers);
+    
+            const responseData = this.handleResponse(response);
+    
+            return responseData;
+    
+        } catch(e) {
+
+            return this.generateErrorResponse(e);
+            
+        }
+
+    },
+    async logout(token) {
+
+        try {
+
+            const headers = {
+                Authorization: `Bearer ${token}`
+            };
+    
+            const response = await axios.get(`${basePath}/api/auth/${token}`, headers);
+    
+            const responseData = this.handleResponse(response);
+    
+            return responseData;
+    
+        } catch(e) {
+
+            return this.generateErrorResponse(e);
+            
+        }
+
+    }
+    
+};
+
+export default AuthService;

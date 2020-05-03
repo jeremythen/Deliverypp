@@ -25,6 +25,7 @@
     "font-awesome": "^4.7.0",
     "react": "16.11.0",
     "react-native": "0.62.1",
+    "react-native-axios": "^0.17.1",
     "react-native-credit-card-input": "^0.4.1",
     "react-native-elements": "^1.2.7",
     "react-native-formik": "^1.7.8",

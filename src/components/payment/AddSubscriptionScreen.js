@@ -14,7 +14,7 @@ const STRIPE_PUBLISHABLE_KEY = 'pk_test_r3ni1vHk272Bas6n40X08xQI00gCS3O1z2';
  * @param creditCardData the credit card data
  * @return Promise with the Stripe data
  */
-const getCreditCardToken = (creditCardData) => {
+const getCreditCardToken = creditCardData => {
   const card = {
     'card[number]': creditCardData.values.number.replace(/ /g, ''),
     'card[exp_month]': creditCardData.values.expiry.split('/')[0],
@@ -42,12 +42,12 @@ const getCreditCardToken = (creditCardData) => {
  * @param creditCardToken
  * @return {Promise<Response>}
  */
-const subscribeUser = (creditCardToken) => {
-  return new Promise((resolve) => {
+const subscribeUser = creditCardToken => {
+  return new Promise(resolve => {
     console.log('Credit card token\n', creditCardToken);
     setTimeout(() => {
-      resolve({ status: true });
-    }, 1000)
+      resolve({status: true});
+    }, 1000);
   });
 };
 

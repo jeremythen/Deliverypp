@@ -1,7 +1,6 @@
 import React from 'react';
 import MapView from 'react-native-maps';
 import { StyleSheet, View, Dimensions, Text, Alert, TouchableHighlight } from 'react-native';
-import { Badge, Icon, SearchBar, Overlay, Button } from 'react-native-elements';
 
 const {height, width} = Dimensions.get('window');
 
@@ -36,28 +35,20 @@ class LocationMap extends React.Component {
       },
     };
     
-    this.onMapReady = this.onMapReady.bind(this);
     this.onRegionChange = this.onRegionChange.bind(this);
-    this.onOrder = this.onOrder.bind(this);
-
-  }
-
-  onMapReady() {
-    console.log('map ready');
+    this.getResponse = this.getResponse.bind(this);
   }
 
   onRegionChange(region) {
-
     this.setState({region});
-
   }
 
-  onOrder() {
-    Alert.alert('Ordering.');
+
+  getResponse() {
+    return  { total: this.props.route.params.total, location: {latitude: this.state.region.latitude, longitude: this.state.region.longitude }, selectedProducts: this.props.route.params.selectedProducts };
   }
 
   render() {
-
 
     return (
       <View style={styles.container}>
@@ -85,11 +76,10 @@ class LocationMap extends React.Component {
         <TouchableHighlight
             activeOpacity={0.6}
             underlayColor="#DDDDDD"
-            //onPress={() => this.onOrder()}
-            onPress={() => this.props.navigation.navigate('MakePayment', {total: this.props.total})}
-            style={{backgroundColor: this.props.color, borderRadius: 5 }}
+            onPress={() => this.props.navigation.navigate('ConfirmOrderView', this.getResponse())}
+            style={{backgroundColor: this.props.color}}
         >
-          <Text style={styles.button}>Ordenar</Text>
+          <Text style={styles.button}>Continuar</Text>
         </TouchableHighlight>
 
       </View>

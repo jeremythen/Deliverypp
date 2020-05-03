@@ -1,17 +1,8 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow strict-local
- */
-
-
 import 'react-native-gesture-handler';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -34,33 +25,35 @@ import Loader from './src/components/Loader';
 
 import AddSubscription from './src/components/payment/AddSubscriptionScreen';
 
+import Main from './src/components/Main';
+
+import ConfirmOrderView from './src/components/payment/ConfirmOrderView';
+
 const Stack = createStackNavigator();
 
 const mainColor = '#fc0352';
+const secondColor = '#f7457e';
 
 const App = () => {
 
-  const [loading, setLoading] = useState(true);
+  let [loading, setLoading] = useState(true);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   //const [total, setTotal] = useState(0);
 
-  AsyncStorage.getItem(
-    '@Deliverypp:jwtToken',
-      (err, data) => {
-          if(err) {
-            Alert.alert('Hubo un error. Trata más tarde');
-            setIsLoggedIn(false);
-
-            setTimeout(() => setLoading(false), 1000);
-            
-          } else {
-              setIsLoggedIn(!!data);
-              //Alert.alert('data ' + data);
-              //setIsLoggedIn(true);
-              setTimeout(() => setLoading(false), 1000);
-          }
-      }
-  )
+  useEffect(() => {
+    AsyncStorage.getItem(
+      '@Deliverypp:jwtToken',
+        (err, data) => {
+            if(err) {
+              Alert.alert('Hubo un error. Trata más tarde');
+              setIsLoggedIn(false);
+            } else {
+                setIsLoggedIn(!!data);
+                setTimeout(() => setLoading(false), 1000);
+            }
+        }
+    );
+  });
 
   if(loading) {
     return <Loader color={mainColor} loading={loading} />
@@ -73,6 +66,16 @@ const App = () => {
   return (
     <NavigationContainer style={styles.container}>
       <Stack.Navigator style={styles.container}>
+
+        <Stack.Screen
+          name="Main"
+          options={{title: 'Deliverypp', headerTintColor: mainColor}}
+        >
+          {
+            props => <Main color={mainColor} {...props} />
+          }
+        </Stack.Screen>
+
         <Stack.Screen style={styles.container}
           name="AvailableProductsView"
           options={{title: 'Deliverypp', headerTintColor: mainColor}}
@@ -89,6 +92,15 @@ const App = () => {
         >
           {
             props => <LocationMap color={mainColor} {...props} total={500} />
+          }
+        </Stack.Screen>
+
+        <Stack.Screen
+          name="ConfirmOrderView"
+          options={{title: 'Confirmar Orden', headerTintColor: mainColor}}
+        >
+          {
+            props => <ConfirmOrderView {...props} color={mainColor} secondColor={secondColor} />
           }
         </Stack.Screen>
 
