@@ -13,40 +13,6 @@ function Main(props) {
         title="Productos"
         onPress={() => props.navigation.navigate('AvailableProductsView')}
       />
-
-      <View style={styles.bottomContainer}>
-        <Icon
-          name="user"
-          type="font-awesome"
-          color={iconsColor}
-          size={36}
-          onPress={() => Alert.alert('in icon')}
-        />
-
-        <Icon
-          name="credit-card"
-          type="font-awesome"
-          color={iconsColor}
-          size={36}
-          onPress={() => Alert.alert('in icon')}
-        />
-
-        <Icon
-          name="user"
-          type="font-awesome"
-          color={iconsColor}
-          size={36}
-          onPress={() => Alert.alert('in icon')}
-        />
-
-        <Icon
-          name="cog"
-          type="font-awesome"
-          color={iconsColor}
-          size={36}
-          onPress={() => Alert.alert('in icon')}
-        />
-      </View>
     </View>
   );
 }
@@ -57,19 +23,6 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
 
 
-    },
-    bottomContainer: {
-
-        flexDirection: 'row',
-        alignItems: 'flex-end',
-        alignSelf: 'flex-end',
-        justifyContent: 'space-between',
-        height: 50,
-        width: '100%',
-        position: 'absolute',
-        bottom: 0,
-        left: 0,
-        padding: 8
     }
 })
 

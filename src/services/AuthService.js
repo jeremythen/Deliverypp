@@ -1,6 +1,6 @@
 import axios from 'react-native-axios';
 
-const basePath = 'http://165.227.191.188:8080';
+const basePath = 'http://deliveryppqa-env.eba-65djpv3c.us-east-1.elasticbeanstalk.com';
 
 const AuthService = {
     generateErrorResponse(error) {
