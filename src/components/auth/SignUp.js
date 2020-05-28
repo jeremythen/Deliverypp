@@ -1,4 +1,4 @@
-import React, { useState, isValidElement } from 'react';
+import React, { useState } from 'react';
 import {View, StyleSheet, Alert, TouchableHighlight, Text } from 'react-native';
 
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -10,12 +10,44 @@ function SignUp(props) {
     const [email, setEmail] = useState('');
     const [userName, setUserName] = useState('');
     const [password, setPassword] = useState('');
+    const [telephone, setTelephone] = useState('');
+    const [name, setName] = useState('');
 
     const [emailError, setEmailError] = useState('');
     const [userNameError, setUserNameError] = useState('');
     const [passwordError, setPasswordError] = useState('');
+    const [nameError, setNameError] = useState('');
+    const [telephoneError, setTelephoneError] = useState('');
     
     const [isDirty, setIsDirty] = useState(false);
+
+    const onNameChange = (name) => {
+
+        if(!isDirty) {
+            setIsDirty(true);
+        }
+
+        if(!name) {
+            setNameError('Introduzca su nombre.');
+        } else {
+            setNameError('');
+        }
+        setName(name);
+    };
+
+    const onTelephoneChange = (telephone) => {
+
+        if(!isDirty) {
+            setIsDirty(true);
+        }
+
+        if(!telephone) {
+            setTelephoneError('Introduzca su teléfono.');
+        } else {
+            setTelephoneError('');
+        }
+        setTelephone(telephone);
+    };
 
     const onEmailChange = (email) => {
 
@@ -78,6 +110,16 @@ function SignUp(props) {
             valid = false;
         }
 
+        if(!name) {
+            setPasswordError('Introduzca su nombre.');
+            valid = false;
+        }
+
+        if(!telephone) {
+            setPasswordError('Introduzca su teléfono.');
+            valid = false;
+        }
+
         return valid;
 
     }
@@ -101,6 +143,22 @@ function SignUp(props) {
             placeholder="Email"
             leftIcon={<Icon name="envelope" size={24} color={props.color} />}
             errorMessage={emailError}
+        />
+
+        <Input
+            value={name}
+            onChangeText={onNameChange}
+            placeholder="Nombre"
+            leftIcon={<Icon name="user" size={24} color={props.color} />}
+            errorMessage={nameError}
+        />
+
+        <Input
+            value={telephone}
+            onChangeText={onTelephoneChange}
+            placeholder="Teléfono"
+            leftIcon={<Icon name="phone" size={24} color={props.color} />}
+            errorMessage={telephoneError}
         />
 
         <Input

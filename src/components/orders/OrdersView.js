@@ -17,11 +17,12 @@ function OrderView() {
             const orders = response.response;
             setOrders(orders);
           } else {
-            Alert.alert('Error obteniendo orders: ' + response.message);
+            setOrders([]);
+            //Alert.alert('Error obteniendo orders: ' + response.message);
           }
     
         } catch(e) {
-          Alert.alert('Error obteniendo orders. Trate más tarde.');
+          //Alert.alert('Error obteniendo orders. Trate más tarde.');
         }
       
       };

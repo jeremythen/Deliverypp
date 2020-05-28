@@ -1,13 +1,11 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, Dimensions, Text, Alert } from 'react-native';
-import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
+import {  Dimensions } from 'react-native';
+import { TabView, TabBar } from 'react-native-tab-view';
 
 import SignUp from './SignUp';
 import SignIn from './SignIn';
 
 function SignUpLoginFormsTab(props) {
-
-    //Alert.alert(props.color)
 
     const [index, setIndex] = useState(0);
 
@@ -29,7 +27,7 @@ function SignUpLoginFormsTab(props) {
     const renderScene = ({route}) => {
         switch(route.key) {
             case 'first':
-                return <SignIn color={props.color} />;
+                return <SignIn onLogin={props.onLogin} color={props.color} />;
             case 'second':
                 return <SignUp color={props.color} />
             default:
@@ -39,13 +37,13 @@ function SignUpLoginFormsTab(props) {
 
     return (
 
-            <TabView
-                navigationState={{ index, routes }}
-                renderTabBar={renderTabBar}
-                onIndexChange={setIndex}
-                initialLayout={initialLayout}
-                renderScene={renderScene}
-            />
+        <TabView
+            navigationState={{ index, routes }}
+            renderTabBar={renderTabBar}
+            onIndexChange={setIndex}
+            initialLayout={initialLayout}
+            renderScene={renderScene}
+        />
 
     );
 

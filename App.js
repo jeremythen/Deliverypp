@@ -13,6 +13,9 @@ import Loader from './src/components/Loader';
 
 import BottomTabNavigator from './src/components/BottomTabNavigator';
 
+import DeliveryppService from './src/services/DeliveryppService';
+
+import Deliverypp from './src/Deliverypp';
 
 const Stack = createStackNavigator();
 
@@ -31,19 +34,27 @@ const App = () => {
   }
 
   useEffect(() => {
-    AsyncStorage.getItem(
-      '@Deliverypp:jwtToken',
-        (err, data) => {
-            if(err) {
-              Alert.alert('Hubo un error. Trata más tarde');
-              setIsLoggedIn(false);
-            } else {
-                setIsLoggedIn(!!data);
-                setTimeout(() => setLoading(false), 1000);
-            }
-        }
-    );
+
+    DeliveryppService.getLocalUserData().then(user => {
+
+      Alert.alert('user: ' + JSON.stringify(user));
+
+      if(user) {
+        Deliverypp.user = user;
+      }
+
+      setIsLoggedIn(false);
+      setLoading(false);
+    }).catch(err => {
+      setIsLoggedIn(false);
+      setLoading(false);
+    });
+
   });
+
+  const onLogin = () => {
+    Alert.alert("on login")
+  }
 
   if(loading) {
     return <Loader color={mainColor} loading={loading} />
@@ -54,19 +65,9 @@ const App = () => {
   }*/
 
   return (
-    <BottomTabNavigator onLogout={onLogout}/>
+    <BottomTabNavigator onLogout={onLogout} onLogin={onLogin} />
   );
 };
 
-
-//BottomTabNavigator
-
-
-const styles = StyleSheet.create({
-  container: {
-    margin: 0,
-    padding: 0
-  }
-});
 
 export default App;

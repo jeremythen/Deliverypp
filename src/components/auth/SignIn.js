@@ -56,7 +56,7 @@ function SignIn(props) {
         <TouchableHighlight
             activeOpacity={0.6}
             underlayColor="#DDDDDD"
-            onPress={() => Alert.alert('Pressed!')}
+            onPress={() => props.onLogin}
             style={{backgroundColor: props.color, marginTop: 15, borderRadius: 5 }}
         >
             <Text style={styles.button}>{'Entrar'}</Text>

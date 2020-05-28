@@ -1,6 +1,10 @@
 import axios from 'react-native-axios';
 
-const basePath = 'http://deliveryppqa-env.eba-65djpv3c.us-east-1.elasticbeanstalk.com';
+import Deliverypp from '../Deliverypp';
+
+import DeliveryppService from './DeliveryppService';
+
+const basePath = Deliverypp.apiBaseUrl;
 
 const AuthService = {
     generateErrorResponse(error) {
@@ -51,6 +55,17 @@ const AuthService = {
 
             const responseData = this.handleResponse(response);
 
+            if(responseData.success) {
+
+                const user = responseData.response.user;
+                user.token = responseData.response.token;
+
+                DeliveryppService.saveLocalUserData(user);
+
+                Deliverypp.user = user;
+
+            }
+
             return responseData;
     
         } catch(e) {
@@ -81,25 +96,13 @@ const AuthService = {
         }
 
     },
-    async logout(token) {
+    logout() {
 
-        try {
+        const emptyUser = { isLoggedIn: false, name: '', lastName: '', telephone: '', email: '', location: { longitude: 0, latitude: 0 }};
 
-            const headers = {
-                Authorization: `Bearer ${token}`
-            };
-    
-            const response = await axios.get(`${basePath}/api/auth/${token}`, headers);
-    
-            const responseData = this.handleResponse(response);
-    
-            return responseData;
-    
-        } catch(e) {
+        Deliverypp.user = emptyUser;
 
-            return this.generateErrorResponse(e);
-            
-        }
+        return DeliveryppService.saveLocalUserData(emptyUser);
 
     }
     

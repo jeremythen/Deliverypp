@@ -18,9 +18,23 @@ import { createAppContainer} from 'react-navigation';
 
 import ProductFlowView from './ProductFlowView';
 
-import ProfileScreen from './ProfileScreen';
+import ProfileView from './ProfileView';
 import PaymentMethodView from './PaymentMethodView';
 import CartScreen from './CartScreen';
+
+import SignUpLoginFormsTab from './auth/SignUpLoginFormsTab';
+
+import Deliverypp from '../Deliverypp';
+
+const ProfileScreen = () => {
+    return <ProfileView />;
+}
+
+const SignUpLoginFormsScreen = () => {
+    return <SignUpLoginFormsTab color={Deliverypp.mainColor} />;
+}
+
+const mainColor = Deliverypp.mainColor;
 
 const TabNavigator = createMaterialBottomTabNavigator(
     {  
@@ -33,7 +47,7 @@ const TabNavigator = createMaterialBottomTabNavigator(
                     </View>),  
             }  
         },  
-        Profile: { screen: ProfileScreen,  
+        Profile: { screen: screenProps => Deliverypp.user.isLoggedIn ? <ProfileView />: <SignUpLoginFormsTab color={mainColor} />,  
             navigationOptions:{  
                 tabBarLabel:'Profile',
                 title: 'Profile',

@@ -19,7 +19,7 @@ const allProductsCategory = {
 
 function ProductsCategoriesView(props) {
 
-    //const [categories, setCategory] = useState([]);
+    const [categories, setCategory] = useState([]);
 
     const handleGetCategories = async () => {
 
@@ -29,7 +29,7 @@ function ProductsCategoriesView(props) {
             if(response.success) {
                 const categories = response.response;
                 categories.unshift(allProductsCategory);
-                //setCategory(categories);
+                setCategory(categories);
             } else {
                 Alert.alert('Error obteniendo categorias: ' + response.message);
             }
