@@ -5,10 +5,14 @@ import React from 'react';
 import {
   View,
   StyleSheet,
+  Text,
+  Alert
 } from 'react-native';
 
 import { createMaterialBottomTabNavigator } from 'react-navigation-material-bottom-tabs';  
 import Icon from 'react-native-vector-icons/Ionicons';  
+
+import { Icon as EIcon, Badge } from 'react-native-elements';
 
 import { createAppContainer} from 'react-navigation';
 
@@ -31,7 +35,8 @@ const TabNavigator = createMaterialBottomTabNavigator(
         },  
         Profile: { screen: ProfileScreen,  
             navigationOptions:{  
-                tabBarLabel:'Profile',  
+                tabBarLabel:'Profile',
+                title: 'Profile',
                 tabBarIcon: ({ tintColor }) => (  
                     <View>  
                         <Icon style={[{color: tintColor}]} size={25} name={'ios-person'}/>  
@@ -49,13 +54,13 @@ const TabNavigator = createMaterialBottomTabNavigator(
             }  
         },  
         Cart: {  
-            screen: CartScreen,  
+            screen: () => CartScreen,  
             navigationOptions:{  
                 tabBarLabel:'Cart',  
-                tabBarIcon: ({ tintColor }) => (  
-                    <View>  
-                        <Icon style={[{color: tintColor}]} size={25} name={'ios-cart'}/>  
-                    </View>),  
+                tabBarIcon: (props) => ( 
+                    <CartIcon color={props.tintColor} p={props}/>
+                )
+
             }  
         },  
     },  
@@ -78,6 +83,25 @@ const TabNavigator = createMaterialBottomTabNavigator(
       alignItems: 'center'  
     },  
   });
+
+  function CartIcon(props) {
+      return (
+        <View>
+            <EIcon
+                name='shopping-cart'
+                type='font-awesome'
+                color={props.color}
+                size={25}
+                //onPress={() => props.setModalVisible(true)}
+            />
+            <Badge
+                status="success"
+                containerStyle={{ position: 'absolute', top: -4, right: -4 }}
+                value={1}  
+            />
+        </View>
+      )
+  }
   
   const WrappedTabNavigator = createAppContainer(TabNavigator);
 

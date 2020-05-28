@@ -11,6 +11,7 @@ import Loader from './../Loader';
 
 import ProductService from '../../services/ProductService';
 
+
 export default function AvailableProductsView(props) {
 
   const [total, setTotal] = useState(0);
@@ -19,8 +20,21 @@ export default function AvailableProductsView(props) {
   const [modalVisible, setModalVisible] = useState(false);
   const [loading, setLoading] = useState(false);
   const [products, setProducts] = useState([]);
-
+  const [filterCategory] = useState(props.route.params.category);
   const [selectedProducts, setSelectedProducts] = useState([]);
+
+  const handleSetProducts = (products) => {
+
+    if(filterCategory !== 'Todos') {
+      const filteredProducts = products.filter(product => {
+      return product.category === filterCategory
+    });
+      return setProducts(filteredProducts);
+    }
+
+    setProducts(products);
+
+  }
 
   const handleGetProducts = async () => {
 
@@ -28,7 +42,8 @@ export default function AvailableProductsView(props) {
       const response = await ProductService.getProducts();
       
       if(response.success) {
-        setProducts(response.response);
+        const products = response.response;
+        handleSetProducts(products);
       } else {
         Alert.alert('Error obteniendo productos: ' + response.message);
       }
@@ -40,7 +55,9 @@ export default function AvailableProductsView(props) {
   };
 
   useEffect(() => {
+
     handleGetProducts();
+
   }, []);
 
   const handleSetTotal = (productTotal) => {
@@ -114,7 +131,7 @@ export default function AvailableProductsView(props) {
       <Loader loading={loading} color={props.color}/>
 
       <View>
-        <Text style={{ fontSize: 22, textAlign: 'center', color: props.color }}>Productos Disponibles</Text>
+        <Text style={{ fontSize: 22, textAlign: 'center', color: props.color }}>{filterCategory} Disponibles</Text>
       </View>
 
       <SearchBar

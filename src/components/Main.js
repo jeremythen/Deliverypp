@@ -3,7 +3,6 @@ import React from 'react';
 import {Alert, Button, View, StyleSheet} from 'react-native';
 import {Icon} from 'react-native-elements';
 
-
 const iconsColor = 'grey';
 
 function Main(props) {

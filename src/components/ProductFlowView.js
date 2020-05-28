@@ -12,11 +12,13 @@ import AvailableProductsView from './products/AvailableProductsView';
 
 import AddSubscription from './payment/AddSubscriptionScreen';
 
-import Main from './Main';
-
 import ConfirmOrderView from './payment/ConfirmOrderView';
 
 import { TabView, TabBar } from 'react-native-tab-view';
+
+import ProductsCategoriesView from './products/ProductsCategoriesView';
+
+import OrdersView from './orders/OrdersView';
 
 
 const Stack = createStackNavigator();
@@ -36,49 +38,49 @@ function Products(props) {
             <Stack.Navigator style={styles.container}>
         
                 <Stack.Screen
-                name="Main"
-                options={{title: '', headerTintColor: mainColor}}
-                >
-                {
-                    props => <Main color={mainColor} {...props} />
-                }
+                    name="ProductsCategoriesView"
+                    options={{title: 'Categorías', headerTintColor: mainColor}}
+                    >
+                    {
+                        props => <ProductsCategoriesView color={mainColor} {...props} />
+                    }
                 </Stack.Screen>
         
                 <Stack.Screen style={styles.container}
-                name="AvailableProductsView"
-                options={{title: '', headerTintColor: mainColor}}
-                initialParams={{color: mainColor}}
-                >
-                {
-                    props => <AvailableProductsView color={mainColor} {...props} />
-                }
+                    name="AvailableProductsView"
+                    options={{title: '', headerTintColor: mainColor}}
+                    initialParams={{color: mainColor}}
+                    >
+                    {
+                        props => <AvailableProductsView color={mainColor} {...props} />
+                    }
                 </Stack.Screen>
         
                 <Stack.Screen
-                name="LocationMap"
-                options={{title: 'Selecciona El Destino', headerTintColor: mainColor}}
-                >
-                {
-                    props => <LocationMap color={mainColor} {...props} total={500} />
-                }
+                    name="LocationMap"
+                    options={{title: 'Selecciona El Destino', headerTintColor: mainColor}}
+                    >
+                    {
+                        props => <LocationMap color={mainColor} {...props} total={500} />
+                    }
                 </Stack.Screen>
         
                 <Stack.Screen
-                name="ConfirmOrderView"
-                options={{title: 'Confirmar Orden', headerTintColor: mainColor}}
-                >
-                {
-                    props => <ConfirmOrderView {...props} color={mainColor} secondColor={secondColor} />
-                }
+                    name="ConfirmOrderView"
+                    options={{title: 'Confirmar Orden', headerTintColor: mainColor}}
+                    >
+                    {
+                        props => <ConfirmOrderView {...props} color={mainColor} secondColor={secondColor} />
+                    }
                 </Stack.Screen>
         
                 <Stack.Screen
-                name="MakePayment"
-                options={{title: 'Agregar Método De Pago', headerTintColor: mainColor}}
-                >
-                {
-                    props => <AddSubscription {...props} />
-                }
+                    name="MakePayment"
+                    options={{title: 'Agregar Método De Pago', headerTintColor: mainColor}}
+                    >
+                    {
+                        props => <AddSubscription {...props} />
+                    }
                 </Stack.Screen>
             
             </Stack.Navigator>
@@ -87,13 +89,6 @@ function Products(props) {
     )
 }
 
-function Orders(props) {
-    return (
-        <View>
-            <Text>In Orders</Text>
-        </View>
-    )
-}
 
 
 function ProductsOrdersTabs(props) {
@@ -119,7 +114,7 @@ function ProductsOrdersTabs(props) {
             case 'first':
                 return <Products color={mainColor} />;
             case 'second':
-                return <Orders color={mainColor} />
+                return <OrdersView color={mainColor} />
             default:
                 return null;
         }

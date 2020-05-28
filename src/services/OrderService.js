@@ -1,8 +1,25 @@
 import axios from 'react-native-axios';
+import { Alert } from 'react-native';
 
-const basePath = 'http://deliveryppqa-env.eba-65djpv3c.us-east-1.elasticbeanstalk.com';
+import AsyncStorage from '@react-native-community/async-storage';
+
+import Deliverypp from '../Deliverypp';
+
+const basePath = Deliverypp.apiBaseUrl;
 
 const OrderService = {
+    async getParamValue(param) {
+        return AsyncStorage.getItem(
+            `@Deliverypp:${param}`,
+              (err, data) => {
+                  if(err) {
+                    Alert.alert('Hubo un error. Trata más tarde');
+                  } else {
+                      return data;
+                  }
+              }
+        );
+    },
     generateErrorResponse(message) {
         const responseData = {
             success: false,
@@ -18,6 +35,28 @@ const OrderService = {
     
             return deliveryppResponse;
         }
+    },
+    async getUserOrders() {
+
+        try {
+ 
+            const token = await this.getParamValue('jwtToken');
+            const userId = await this.getParamValue('userId');
+
+            const headers = {
+                Authorization: `Bearer ${token}`
+            };
+
+            const response = await axios.get(`${basePath}/api/orders/user/${userId}`, { headers });
+
+            return this.handleResponse(response);
+    
+        } catch(e) {
+
+            return this.generateErrorResponse(e.message);
+
+        }
+
     },
     async getOrders() {
 

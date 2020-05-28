@@ -3,14 +3,23 @@ import React from 'react';
 import {
     View,
     Text,
-    StyleSheet
+    StyleSheet,
+    Button
   } from 'react-native';
 
-class ProfileScreen extends React.Component {  
+  import AsyncStorage from '@react-native-community/async-storage';
+
+class ProfileScreen extends React.Component { 
+
+    logOut() {
+        AsyncStorage.removeItem('@Deliverypp:jwtToken');
+    }
+
     render() {  
         return (  
             <View style={styles.tabContainer}>  
-            <Text>Profile Screen</Text>  
+                <Text>Profile Screen</Text>
+                <Button onPress={() => this.logOut()} title="Logout"/>
             </View>  
         );  
     }  

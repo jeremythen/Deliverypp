@@ -1,6 +1,8 @@
 import axios from 'react-native-axios';
 
-const basePath = 'http://deliveryppqa-env.eba-65djpv3c.us-east-1.elasticbeanstalk.com';
+import Deliverypp from '../Deliverypp';
+
+const basePath = Deliverypp.apiBaseUrl;
 
 const ProductService = {
     async handleResponse(response) {

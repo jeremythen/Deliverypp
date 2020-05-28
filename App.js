@@ -1,42 +1,18 @@
 import 'react-native-gesture-handler';
-import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 
 import React, { useState, useEffect } from 'react';
 import {
-  View,
-  Text,
-  TouchableOpacity,
   StyleSheet,
   Alert
 } from 'react-native';
 
 import AsyncStorage from '@react-native-community/async-storage';
 
-import Geolocation from '@react-native-community/geolocation';
-
-import LocationMap from './src/components/LocationMap';
-
-import AvailableProductsView from './src/components/products/AvailableProductsView';
-
-import SignUpLoginFormsTab from './src/components/auth/SignUpLoginFormsTab';
-
-import { createMaterialBottomTabNavigator } from 'react-navigation-material-bottom-tabs';  
-import Icon from 'react-native-vector-icons/Ionicons';  
-
-import { createBottomTabNavigator, createAppContainer} from 'react-navigation';  
-
 import Loader from './src/components/Loader';
-
-import AddSubscription from './src/components/payment/AddSubscriptionScreen';
-
-import Main from './src/components/Main';
-
-import ConfirmOrderView from './src/components/payment/ConfirmOrderView';
 
 import BottomTabNavigator from './src/components/BottomTabNavigator';
 
-import ProductFlowView from './src/components/ProductFlowView';
 
 const Stack = createStackNavigator();
 
@@ -49,6 +25,10 @@ const App = () => {
   let [loading, setLoading] = useState(true);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   //const [total, setTotal] = useState(0);
+
+  const onLogout = () => {
+    setIsLoggedIn(false);
+  }
 
   useEffect(() => {
     AsyncStorage.getItem(
@@ -74,7 +54,7 @@ const App = () => {
   }*/
 
   return (
-    <BottomTabNavigator />
+    <BottomTabNavigator onLogout={onLogout}/>
   );
 };
 
