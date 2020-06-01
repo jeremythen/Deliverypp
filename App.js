@@ -2,12 +2,6 @@ import 'react-native-gesture-handler';
 import {createStackNavigator} from '@react-navigation/stack';
 
 import React, { useState, useEffect } from 'react';
-import {
-  StyleSheet,
-  Alert
-} from 'react-native';
-
-import AsyncStorage from '@react-native-community/async-storage';
 
 import Loader from './src/components/Loader';
 
@@ -17,55 +11,64 @@ import DeliveryppService from './src/services/DeliveryppService';
 
 import Deliverypp from './src/Deliverypp';
 
-const Stack = createStackNavigator();
+import UserContext from './src/components/context/UserContext';
 
-const mainColor = '#fc0352';
-const secondColor = '#f7457e';
+import { Alert } from 'react-native';
 
+const mainColor = Deliverypp.mainColor;
 
 const App = () => {
 
   let [loading, setLoading] = useState(true);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  //const [total, setTotal] = useState(0);
-
-  const onLogout = () => {
-    setIsLoggedIn(false);
-  }
+  const [order, setOrder] = useState({});
+  const [user, setUser] = useState({});
 
   useEffect(() => {
 
-    DeliveryppService.getLocalUserData().then(user => {
+    DeliveryppService.getLocalUserData().then(userJson => {
 
-      Alert.alert('user: ' + JSON.stringify(user));
-
-      if(user) {
-        Deliverypp.user = user;
+      if(userJson) {
+        user = JSON.parse(userJson)
+        setUser(user);
+        setIsLoggedIn(user.isLoggedIn);
       }
-
-      setIsLoggedIn(false);
+      
       setLoading(false);
     }).catch(err => {
       setIsLoggedIn(false);
       setLoading(false);
     });
 
-  });
+  }, [isLoggedIn]);
 
   const onLogin = () => {
-    Alert.alert("on login")
+    setIsLoggedIn(true);
+  }
+
+  const onSignup = () => {
+    setIsLoggedIn(true);
+  }
+
+  const onOrderUpdate = order => {
+    setOrder(order);
+  }
+  
+  const onLogout = () => {
+    setIsLoggedIn(false);
   }
 
   if(loading) {
     return <Loader color={mainColor} loading={loading} />
   }
 
-  /*if(!isLoggedIn) {
-    return <SignUpLoginFormsTab color={mainColor} />;
-  }*/
+  Alert.alert('isLoggedIn ' + isLoggedIn);
+  Alert.alert('user ' + JSON.stringify(user));
 
   return (
-    <BottomTabNavigator onLogout={onLogout} onLogin={onLogin} />
+    <UserContext.Provider value={{ onLogout, onLogin, onSignup, isLoggedIn, onOrderUpdate, user }} >
+      <BottomTabNavigator />
+    </UserContext.Provider>
   );
 };
 

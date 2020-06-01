@@ -1,9 +1,10 @@
 import Deliverypp from '../Deliverypp';
 
 import AsyncStorage from '@react-native-community/async-storage';
+import { Alert } from 'react-native';
 
 const CategoryService = {
-    getParamValue(param) {
+    async getParamValue(param) {
         return AsyncStorage.getItem(
             `@Deliverypp:${param}`,
               (err, data) => {
@@ -15,10 +16,10 @@ const CategoryService = {
               }
         );
     },
-    saveParamValue(param, value) {
-        return AsyncStorage.setItem(`@Deliverypp:${param}`, value);
+    async saveParamValue(param, value) {
+        return AsyncStorage.setItem(`@Deliverypp:${param}`, JSON.stringify(value)).then(() => ({success: true}));
     },
-    removeParam(param) {
+    async removeParam(param) {
         return AsyncStorage.removeItem(`@Deliverypp:${param}`);
     },
     getLocalUserData() {
@@ -29,6 +30,9 @@ const CategoryService = {
     },
     isUserLoggedIn() {
         return Deliverypp.user.isLoggedIn;
+    },
+    removeLocalUser() {
+        this.removeParam('user');
     }
 };
 

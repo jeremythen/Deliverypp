@@ -26,13 +26,7 @@ import SignUpLoginFormsTab from './auth/SignUpLoginFormsTab';
 
 import Deliverypp from '../Deliverypp';
 
-const ProfileScreen = () => {
-    return <ProfileView />;
-}
-
-const SignUpLoginFormsScreen = () => {
-    return <SignUpLoginFormsTab color={Deliverypp.mainColor} />;
-}
+import UserContext from './context/UserContext';
 
 const mainColor = Deliverypp.mainColor;
 
@@ -47,7 +41,17 @@ const TabNavigator = createMaterialBottomTabNavigator(
                     </View>),  
             }  
         },  
-        Profile: { screen: screenProps => Deliverypp.user.isLoggedIn ? <ProfileView />: <SignUpLoginFormsTab color={mainColor} />,  
+        Profile: { screen: screenProps => (
+                <UserContext.Consumer>
+                    {
+                        context => (
+
+                            context.isLoggedIn ? <ProfileView {...context} /> : <SignUpLoginFormsTab {...context} color={mainColor} />
+                        )
+                    }
+                </UserContext.Consumer>
+                
+        ), 
             navigationOptions:{  
                 tabBarLabel:'Profile',
                 title: 'Profile',

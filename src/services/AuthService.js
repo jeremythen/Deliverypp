@@ -3,6 +3,7 @@ import axios from 'react-native-axios';
 import Deliverypp from '../Deliverypp';
 
 import DeliveryppService from './DeliveryppService';
+import { Alert } from 'react-native';
 
 const basePath = Deliverypp.apiBaseUrl;
 
@@ -25,12 +26,13 @@ const AuthService = {
     },
     handleResponse(response) {
         if(response && response.data) {
-
-            const deliveryppResponse = response.data;
-
-            return deliveryppResponse;
-
+            return response.data;
         }
+
+        return {
+            success: false
+        }
+        
     },
     async register(user) {
 
@@ -38,8 +40,14 @@ const AuthService = {
             const response = await axios.post(`${basePath}/api/register`, user);
 
             const responseData = this.handleResponse(response);
+
+            if(responseData.success) {
+                return this.setUserData(responseData.response);
+            }
     
-            return responseData;
+            return {
+                error: true
+            };
     
         } catch(e) {
 
@@ -47,6 +55,14 @@ const AuthService = {
 
         }
 
+    },
+    setUserData(response) {
+        const user = response.user;
+        user.token = response.token;
+        user.isLoggedIn = true;
+        //return Alert.alert('user: ' + JSON.stringify(user))
+        return DeliveryppService.saveLocalUserData(user);
+        
     },
     async login(user) {
 
@@ -56,17 +72,14 @@ const AuthService = {
             const responseData = this.handleResponse(response);
 
             if(responseData.success) {
-
-                const user = responseData.response.user;
-                user.token = responseData.response.token;
-
-                DeliveryppService.saveLocalUserData(user);
-
-                Deliverypp.user = user;
+                //return Alert.alert('res: ' + JSON.stringify(responseData.response))
+                return this.setUserData(responseData.response);
 
             }
 
-            return responseData;
+            return {
+                error: true
+            };
     
         } catch(e) {
             
@@ -94,15 +107,6 @@ const AuthService = {
             return this.generateErrorResponse(e);
             
         }
-
-    },
-    logout() {
-
-        const emptyUser = { isLoggedIn: false, name: '', lastName: '', telephone: '', email: '', location: { longitude: 0, latitude: 0 }};
-
-        Deliverypp.user = emptyUser;
-
-        return DeliveryppService.saveLocalUserData(emptyUser);
 
     }
     

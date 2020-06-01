@@ -4,17 +4,16 @@ import {View, StyleSheet, Alert, TouchableHighlight, Text } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {Input} from 'react-native-elements';
 
-
 function SignUp(props) {
 
     const [email, setEmail] = useState('');
-    const [userName, setUserName] = useState('');
+    const [username, setUserName] = useState('');
     const [password, setPassword] = useState('');
     const [telephone, setTelephone] = useState('');
     const [name, setName] = useState('');
 
     const [emailError, setEmailError] = useState('');
-    const [userNameError, setUserNameError] = useState('');
+    const [usernameError, setUserNameError] = useState('');
     const [passwordError, setPasswordError] = useState('');
     const [nameError, setNameError] = useState('');
     const [telephoneError, setTelephoneError] = useState('');
@@ -63,18 +62,18 @@ function SignUp(props) {
         setEmail(email);
     };
 
-    const onUserNameChange = (userName) => {
+    const onUserNameChange = (username) => {
 
         if(!isDirty) {
             setIsDirty(true);
         }
 
-        if(!userName) {
+        if(!username) {
             setUserNameError('Introduzca un nombre de usuario');
         } else {
             setUserNameError('');
         }
-        setUserName(userName);
+        setUserName(username);
     };
 
     const onPasswordChange = (password) => {
@@ -100,7 +99,7 @@ function SignUp(props) {
             valid = false;
         }
 
-        if(!userName) {
+        if(!username) {
             setUserNameError('Introduzca un nombre de usuario');
             valid = false;
         }
@@ -124,10 +123,21 @@ function SignUp(props) {
 
     }
 
+    const getData = () => {
+        const userInfo = {
+            username,
+            password,
+            email,
+            telephone,
+            name
+        }
+        return userInfo;
+    }
+
     const submit = () => {
 
         if(isValid()) {
-            Alert.alert("Is valid.");
+            props.onSubmit(getData());
         } else {
             Alert.alert("Todos los campos son requeridos.");
         }
@@ -138,38 +148,47 @@ function SignUp(props) {
     <View style={styles.container}>
 
         <Input
+            containerStyle={styles.inputContainerStyle}
             value={email}
             onChangeText={onEmailChange}
             placeholder="Email"
             leftIcon={<Icon name="envelope" size={24} color={props.color} />}
             errorMessage={emailError}
+            label="Email"
         />
 
         <Input
+            containerStyle={styles.inputContainerStyle}
             value={name}
             onChangeText={onNameChange}
             placeholder="Nombre"
             leftIcon={<Icon name="user" size={24} color={props.color} />}
             errorMessage={nameError}
+            label="Nombre"
         />
 
         <Input
+            containerStyle={styles.inputContainerStyle}
             value={telephone}
             onChangeText={onTelephoneChange}
             placeholder="Teléfono"
             leftIcon={<Icon name="phone" size={24} color={props.color} />}
             errorMessage={telephoneError}
+            label="Teléfono"
         />
 
         <Input
+            containerStyle={styles.inputContainerStyle}
             placeholder="Nombre de Usuario"
-            value={userName}
+            value={username}
             onChangeText={onUserNameChange}
             leftIcon={<Icon name="user" size={24} color={props.color} />}
-            errorMessage={userNameError}
+            errorMessage={usernameError}
+            label="Usuario"
         />
 
         <Input
+            containerStyle={styles.inputContainerStyle}
             placeholder="Contraseña"
             secureTextEntry={true}
             value={password}
@@ -177,6 +196,7 @@ function SignUp(props) {
             textContentType="newPassword"
             leftIcon={<Icon name="lock" size={24} color={props.color} />}
             errorMessage={passwordError}
+            label="Contraseña"
         />
 
         <TouchableHighlight
@@ -204,7 +224,10 @@ const styles = StyleSheet.create({
         color: 'white',
         width: 150,
         textAlign: 'center'
-      }
+    },
+    inputContainerStyle: {
+        marginBottom: 12
+    }
 });
 
 

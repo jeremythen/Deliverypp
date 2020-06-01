@@ -1,24 +1,24 @@
 import React, { useState } from 'react';
-import { Button, View, StyleSheet, Alert, TouchableHighlight, Text } from 'react-native';
+import { View, StyleSheet, Alert, TouchableHighlight, Text } from 'react-native';
 
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Input } from 'react-native-elements';
 
 
 function SignIn(props) {
-    const [userName, setUserName] = useState('');
+    const [username, setUserName] = useState('');
     const [password, setPassword] = useState('');
 
-    const [userNameError, setUserNameError] = useState('');
+    const [usernameError, setUserNameError] = useState('');
     const [passwordError, setPasswordError] = useState('');
 
-    const onUserNameChange = (userName) => {
-        if(!userName) {
+    const onUserNameChange = (username) => {
+        if(!username) {
             setUserNameError('Introduzca un nombre de usuario');
         } else {
             setUserNameError('');
         }
-        setUserName(userName);
+        setUserName(username);
     };
 
     const onPasswordChange = (password) => {
@@ -30,19 +30,44 @@ function SignIn(props) {
         setPassword(password);
     };
 
+    const isValid = () => {
+        return username && password;
+    }
+
+    const submit = () => {
+
+        if(isValid()) {
+
+            const user = {
+                username,
+                password
+            }
+
+            props.onSubmit(user);
+
+        } else {
+            setPasswordError('Introduzca su contraseña');
+            setUserNameError('Introduzca un nombre de usuario');
+            Alert.alert("Todos los campos son requeridos.");
+        }
+
+    };
+
   return (
     <View style={styles.container}>
 
         <Input
+            containerStyle={styles.inputContainerStyle}
             placeholder="Nombre de Usuario"
-            value={userName}
+            value={username}
             onChangeText={onUserNameChange}
             leftIcon={<Icon name="user" size={24} color={props.color} />}
-            errorMessage={userNameError}
+            errorMessage={usernameError}
             style={{marginBottom: 10}}
         />
 
         <Input
+            containerStyle={styles.inputContainerStyle}
             placeholder="Contraseña"
             secureTextEntry={true}
             value={password}
@@ -56,7 +81,7 @@ function SignIn(props) {
         <TouchableHighlight
             activeOpacity={0.6}
             underlayColor="#DDDDDD"
-            onPress={() => props.onLogin}
+            onPress={submit}
             style={{backgroundColor: props.color, marginTop: 15, borderRadius: 5 }}
         >
             <Text style={styles.button}>{'Entrar'}</Text>
@@ -80,7 +105,9 @@ const styles = StyleSheet.create({
         color: 'white',
         width: 150,
         textAlign: 'center'
-       
+      },
+      inputContainerStyle: {
+          marginBottom: 12
       }
 });
 
