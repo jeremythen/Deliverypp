@@ -5,8 +5,6 @@ import React from 'react';
 import {
   View,
   StyleSheet,
-  Text,
-  Alert
 } from 'react-native';
 
 import { createMaterialBottomTabNavigator } from 'react-navigation-material-bottom-tabs';  
@@ -19,7 +17,7 @@ import { createAppContainer} from 'react-navigation';
 import ProductFlowView from './ProductFlowView';
 
 import ProfileView from './ProfileView';
-import PaymentMethodView from './PaymentMethodView';
+
 import CartScreen from './CartScreen';
 
 import SignUpLoginFormsTab from './auth/SignUpLoginFormsTab';
@@ -28,13 +26,15 @@ import Deliverypp from '../Deliverypp';
 
 import UserContext from './context/UserContext';
 
+import PaymentMethodView from './payment/PaymentMethodView';
+
 const mainColor = Deliverypp.mainColor;
 
 const TabNavigator = createMaterialBottomTabNavigator(
     {  
         Home: { screen: ProductFlowView,  
             navigationOptions:{  
-                tabBarLabel:'Home',  
+                tabBarLabel:'Inicio',  
                 tabBarIcon: ({ tintColor }) => (  
                     <View>  
                         <Icon style={[{color: tintColor}]} size={25} name={'ios-home'}/>  
@@ -53,7 +53,7 @@ const TabNavigator = createMaterialBottomTabNavigator(
                 
         ), 
             navigationOptions:{  
-                tabBarLabel:'Profile',
+                tabBarLabel:'Perfíl',
                 title: 'Profile',
                 tabBarIcon: ({ tintColor }) => (  
                     <View>  
@@ -70,7 +70,9 @@ const TabNavigator = createMaterialBottomTabNavigator(
                         <Icon style={[{color: tintColor}]} size={25} name={'ios-card'}/>  
                     </View>),  
             }  
-        },  
+        }
+        
+        /*,  
         Cart: {  
             screen: () => CartScreen,  
             navigationOptions:{  
@@ -80,7 +82,7 @@ const TabNavigator = createMaterialBottomTabNavigator(
                 )
 
             }  
-        },  
+        },*/
     },  
     {  
       initialRouteName: "Home",  

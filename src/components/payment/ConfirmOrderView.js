@@ -34,17 +34,17 @@ export default function ConfirmOrderView(props) {
             <View>
                 <View style={styles.rowContainer}>
                     <Text style={styles.textStyle}>Cliente: </Text>
-                    <Text style={styles.textStyle}>Jeremy Then</Text>
+                <Text style={styles.textStyle}>{`${props.user.name} ${props.user.lastName}`}</Text>
                 </View>
 
                 <View style={styles.rowContainer}>
                     <Text style={styles.textStyle}>Teléfono: </Text>
-                    <Text style={styles.textStyle}>8496203718</Text>
+                    <Text style={styles.textStyle}>{props.user.telephone}</Text>
                 </View>
 
                 <View style={styles.rowContainer}>
                     <Text style={styles.textStyle}>Email: </Text>
-                    <Text style={styles.textStyle}>jeremythen16@gmail.com</Text>
+                    <Text style={styles.textStyle}>{props.user.email}</Text>
                 </View>
             </View>
             
@@ -102,7 +102,7 @@ export default function ConfirmOrderView(props) {
                     <TouchableHighlight
                         activeOpacity={0.6}
                         underlayColor="#DDDDDD"
-                        onPress={() => props.navigation.navigate('Main')}
+                        onPress={() => props.navigation.navigate('ProductsCategoriesView')}
                         style={{backgroundColor: 'grey', borderRadius: 5 }}
                     >
                     <Text style={styles.button}>Cancelar</Text>

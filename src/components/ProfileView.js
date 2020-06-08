@@ -1,54 +1,73 @@
 import React from 'react';
 
-import {
-    View,
-    Text,
-    StyleSheet,
-    Button
-  } from 'react-native';
+import {View, StyleSheet} from 'react-native';
 
-  import {Input} from 'react-native-elements';
+import { Input } from 'react-native-elements';
 
-  import AuthService from '../services/AuthService';
+import AuthService from '../services/AuthService';
 
-class ProfileScreen extends React.Component {
+function ProfileScreen(props) {
+  const logOut = () => {
+    AuthService.removeLocalUser();
+    props.onLogout();
+  };
 
-    logOut() {
-        AuthService.removeLocalUser();
-        this.props.onLogout();  
-    }
+  return (
+    <View style={styles.tabContainer}>
 
-    render() {  
-        return (
-            <View style={styles.tabContainer}>
+      <Input
+        containerStyle={styles.inputContainerStyle}
+        value={props.user.username}
+        disabled
+        placeholder="Usuario"
+        label="Usuario"
+      />
 
-                <Input
-                    containerStyle={styles.inputContainerStyle}
-                    value={this.props.user.username}
-                    //onChangeText={onEmailChange}
-                    placeholder="Usuario"
-                    //leftIcon={<Icon name="user" size={24} color={props.color} />}
-                    //errorMessage={emailError}
-                    label="Usuario"
-                />
+      <Input
+        containerStyle={styles.inputContainerStyle}
+        value={props.user.name}
+        disabled
+        placeholder="Nombre"
+        label="Nombre"
+      />
 
-                <Text>Profile Screen</Text>
-                <Button onPress={() => this.logOut()} title="Logout"/>
-            </View>  
-        );  
-    }  
+      <Input
+        containerStyle={styles.inputContainerStyle}
+        value={props.user.lastName}
+        disabled
+        placeholder="Apellido"
+        label="Apellido"
+      />
+
+      <Input
+        containerStyle={styles.inputContainerStyle}
+        value={props.user.email}
+        disabled
+        placeholder="Email"
+        label="Email"
+      />
+
+      <Input
+        containerStyle={styles.inputContainerStyle}
+        value={props.user.telephone}
+        disabled
+        placeholder="Telefono"
+        label="Telefono"
+      />
+
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
-    tabContainer: {  
-        flex: 1,  
-        justifyContent: 'center',  
-        alignItems: 'center'  
-    },
-    inputContainerStyle: {
-        marginBottom: 12
-    }
+  tabContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  inputContainerStyle: {
+    marginBottom: 12,
+  },
 });
-
 
 export default ProfileScreen;

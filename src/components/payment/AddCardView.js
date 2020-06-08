@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, Text, View, Button } from 'react-native';
 import { CreditCardInput } from 'react-native-credit-card-input';
 
-export default class PaymentFormView extends React.Component {
+export default class AddCardView extends React.Component {
   constructor(props) {
     super(props);
     this.state = { cardData: { valid: false } };

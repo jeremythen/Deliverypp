@@ -95,7 +95,8 @@ export default function AvailableProductsView(props) {
         props.navigation.navigate('LocationMap', { total, location, selectedProducts });
       },
       error => Alert.alert(error.message),
-      { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
+      { }
+      // { enableHighAccuracy: true, timeout: 25000, maximumAge: 3600000 }
     );
   };
 

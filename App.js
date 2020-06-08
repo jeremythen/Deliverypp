@@ -25,29 +25,30 @@ const App = () => {
   const [user, setUser] = useState({});
 
   useEffect(() => {
-
     DeliveryppService.getLocalUserData().then(userJson => {
-
       if(userJson) {
-        user = JSON.parse(userJson)
-        setUser(user);
-        setIsLoggedIn(user.isLoggedIn);
+        const user = JSON.parse(userJson)
+        if(user && user.token) {
+          setUser(user);
+          setIsLoggedIn(true);
+        }
       }
-      
       setLoading(false);
     }).catch(err => {
       setIsLoggedIn(false);
       setLoading(false);
     });
 
-  }, [isLoggedIn]);
+  }, []);
 
-  const onLogin = () => {
+  const onLogin = (user) => {
     setIsLoggedIn(true);
+    setUser(user);
   }
 
-  const onSignup = () => {
+  const onSignup = (user) => {
     setIsLoggedIn(true);
+    setUser(user);
   }
 
   const onOrderUpdate = order => {
@@ -62,8 +63,7 @@ const App = () => {
     return <Loader color={mainColor} loading={loading} />
   }
 
-  Alert.alert('isLoggedIn ' + isLoggedIn);
-  Alert.alert('user ' + JSON.stringify(user));
+  Alert.alert('user user: ' + JSON.stringify(user));
 
   return (
     <UserContext.Provider value={{ onLogout, onLogin, onSignup, isLoggedIn, onOrderUpdate, user }} >

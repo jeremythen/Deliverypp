@@ -19,7 +19,8 @@ const AuthService = {
         const responseData = {
             success: false,
             status: 'ERROR',
-            message: message
+            message: message,
+            error: true
         };
 
         return responseData;
@@ -56,13 +57,8 @@ const AuthService = {
         }
 
     },
-    setUserData(response) {
-        const user = response.user;
-        user.token = response.token;
-        user.isLoggedIn = true;
-        //return Alert.alert('user: ' + JSON.stringify(user))
-        return DeliveryppService.saveLocalUserData(user);
-        
+    setUserData(user) {
+        DeliveryppService.saveLocalUserData(user);
     },
     async login(user) {
 
@@ -72,9 +68,11 @@ const AuthService = {
             const responseData = this.handleResponse(response);
 
             if(responseData.success) {
-                //return Alert.alert('res: ' + JSON.stringify(responseData.response))
-                return this.setUserData(responseData.response);
-
+                const loggedInUser = responseData.response.user;
+                loggedInUser.token = responseData.response.token;
+                loggedInUser.isLoggedIn = true;
+                this.setUserData(loggedInUser);
+                return { user: loggedInUser };
             }
 
             return {
@@ -82,9 +80,7 @@ const AuthService = {
             };
     
         } catch(e) {
-            
             return this.generateErrorResponse(e);
-
         }
         
     },

@@ -10,8 +10,6 @@ import LocationMap from './LocationMap';
 
 import AvailableProductsView from './products/AvailableProductsView';
 
-import AddSubscription from './payment/AddSubscriptionScreen';
-
 import ConfirmOrderView from './payment/ConfirmOrderView';
 
 import { TabView, TabBar } from 'react-native-tab-view';
@@ -19,6 +17,10 @@ import { TabView, TabBar } from 'react-native-tab-view';
 import ProductsCategoriesView from './products/ProductsCategoriesView';
 
 import OrdersView from './orders/OrdersView';
+
+import UserContext from './context/UserContext';
+
+import ProfileView from './ProfileView';
 
 
 const Stack = createStackNavigator();
@@ -70,16 +72,16 @@ function Products(props) {
                     options={{title: 'Confirmar Orden', headerTintColor: mainColor}}
                     >
                     {
-                        props => <ConfirmOrderView {...props} color={mainColor} secondColor={secondColor} />
-                    }
-                </Stack.Screen>
-        
-                <Stack.Screen
-                    name="MakePayment"
-                    options={{title: 'Agregar Método De Pago', headerTintColor: mainColor}}
-                    >
-                    {
-                        props => <AddSubscription {...props} />
+                        props =>(
+                            <UserContext.Consumer>
+                                {
+                                    context => (
+                                        context.isLoggedIn ? <ConfirmOrderView {...props} color={mainColor} secondColor={secondColor} {...context} /> : <ProfileView {...context} />
+                                    )
+                                }
+                            </UserContext.Consumer>
+                            
+                        )
                     }
                 </Stack.Screen>
             

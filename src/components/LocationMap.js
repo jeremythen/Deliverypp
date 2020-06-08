@@ -10,7 +10,7 @@ const styles = StyleSheet.create({
     width
   },
   map: {
-    height: height - 100,
+    height: height - 200,
     width
   },
   button: {

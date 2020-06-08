@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import {  Dimensions, Alert } from 'react-native';
+import {  Dimensions, Alert, View, Text } from 'react-native';
 import { TabView, TabBar } from 'react-native-tab-view';
 
 import SignUp from './SignUp';
@@ -10,9 +10,6 @@ import AuthService from '../../services/AuthService';
 function SignUpLoginFormsTab(props) {
 
     const [index, setIndex] = useState(0);
-
-    const initialLayout = { width: Dimensions.get('window').width };
-
     const [routes] = React.useState([
         { key: 'first', title: 'Entrar' },
         { key: 'second', title: 'Registrarse' },
@@ -28,12 +25,10 @@ function SignUpLoginFormsTab(props) {
 
     const onLoginSubmit = userCredentials => {
 
-        //return Alert.alert(JSON.stringify(userCredentials));
-
         AuthService.login(userCredentials)
                         .then(res => {
                             if(res.error) return Alert.alert('Hubo un error. Usuario o contraseña incorrectos.');
-                            props.onLogin();
+                            props.onLogin(res.user);
                         }).catch(err => {
                             Alert.alert('Hubo un error. Inténtelo más tarde. ' + JSON.stringify(err));
                         });
@@ -41,13 +36,10 @@ function SignUpLoginFormsTab(props) {
     }
 
     const conSignupSubmit = userInformation => {
-
-        //return Alert.alert(JSON.stringify(userInformation));
-
         AuthService.register(userInformation)
                         .then(res => {
                             if(res.error) return Alert.alert('Hubo un error. Inténtelo más tarde.');
-                            props.onSignup();
+                            props.onSignup(res.user);
                         }).catch(err => {
                             Alert.alert('Hubo un error. Inténtelo más tarde.');
                         });
@@ -56,7 +48,9 @@ function SignUpLoginFormsTab(props) {
     const renderScene = ({route}) => {
         switch(route.key) {
             case 'first':
-                return <SignIn onSubmit={onLoginSubmit} color={props.color} />;
+                return (
+                    <SignIn onSubmit={onLoginSubmit} color={props.color} />
+                );
             case 'second':
                 return <SignUp onSubmit={conSignupSubmit} color={props.color} />
             default:
